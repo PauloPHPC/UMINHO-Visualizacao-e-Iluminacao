@@ -33,3 +33,7 @@
 18	622	7333533295146941	CMakeFiles/LibRenderer.dir/Renderer/StandardRenderer.cpp.obj	3693ac6f960f055d
 623	668	7333533295571034	LibRenderer.lib	c37baa1ef138b902
 668	816	7333533296783286	main.exe	649d410e92db09ed
+9	526	7333552370331214	CMakeFiles/main.dir/main.cpp.obj	f56cd2e4c2cfdcb5
+18	541	7333552654904971	CMakeFiles/LibRenderer.dir/Renderer/StandardRenderer.cpp.obj	3693ac6f960f055d
+541	593	7333552655373666	LibRenderer.lib	c37baa1ef138b902
+593	898	7333552657873643	main.exe	649d410e92db09ed
