@@ -39,7 +39,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "c:/Users/marco/source/repos/Visualizacao-e-Iluminacao/VI-RT/out/build/x64-Debug"
+			"value" : "c:/Users/paulo/Desktop/Visualizacao e Iluminacao/VI-RT/out/build/x64-Debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -467,7 +467,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/marco/source/repos/Visualizacao-e-Iluminacao/VI-RT/out/build/x64-Debug/CMakeFiles/pkgRedirects"
+			"value" : "C:/Users/paulo/Desktop/Visualizacao e Iluminacao/VI-RT/out/build/x64-Debug/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -527,7 +527,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/Users/marco/source/repos/Visualizacao-e-Iluminacao/VI-RT"
+			"value" : "C:/Users/paulo/Desktop/Visualizacao e Iluminacao/VI-RT"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -539,7 +539,7 @@
 				}
 			],
 			"type" : "PATH",
-			"value" : "C:/Users/marco/Source/Repos/Visualizacao-e-Iluminacao/VI-RT/out/install/x64-Debug"
+			"value" : "C:/Users/paulo/Desktop/Visualizacao e Iluminacao/VI-RT/out/install/x64-Debug"
 		},
 		{
 			"name" : "CMAKE_LINKER",
@@ -1075,7 +1075,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/marco/source/repos/Visualizacao-e-Iluminacao/VI-RT/out/build/x64-Debug"
+			"value" : "C:/Users/paulo/Desktop/Visualizacao e Iluminacao/VI-RT/out/build/x64-Debug"
 		},
 		{
 			"name" : "VI-RT_IS_TOP_LEVEL",
@@ -1099,7 +1099,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/marco/source/repos/Visualizacao-e-Iluminacao/VI-RT"
+			"value" : "C:/Users/paulo/Desktop/Visualizacao e Iluminacao/VI-RT"
 		}
 	],
 	"kind" : "cache",

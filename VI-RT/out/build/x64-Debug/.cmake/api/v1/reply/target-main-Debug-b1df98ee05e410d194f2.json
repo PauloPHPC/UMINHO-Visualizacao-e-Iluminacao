@@ -96,14 +96,6 @@
 	"dependencies" : 
 	[
 		{
-			"backtrace" : 7,
-			"id" : "LibImage::@6890427a1f51a3e7e1df"
-		},
-		{
-			"backtrace" : 3,
-			"id" : "LibPrimitive::@6890427a1f51a3e7e1df"
-		},
-		{
 			"backtrace" : 6,
 			"id" : "LibRenderer::@6890427a1f51a3e7e1df"
 		},
@@ -112,12 +104,20 @@
 			"id" : "LibScene::@6890427a1f51a3e7e1df"
 		},
 		{
-			"backtrace" : 5,
-			"id" : "LibShader::@6890427a1f51a3e7e1df"
-		},
-		{
 			"backtrace" : 2,
 			"id" : "LibCamera::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 7,
+			"id" : "LibImage::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "LibPrimitive::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "LibShader::@6890427a1f51a3e7e1df"
 		}
 	],
 	"id" : "main::@6890427a1f51a3e7e1df",

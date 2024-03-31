@@ -1,9 +1,9 @@
-C:/Users/marco/source/repos/Visualizacao-e-Iluminacao/VI-RT/out/build/x64-Debug/CMakeFiles/main.dir
-C:/Users/marco/source/repos/Visualizacao-e-Iluminacao/VI-RT/out/build/x64-Debug/CMakeFiles/LibCamera.dir
-C:/Users/marco/source/repos/Visualizacao-e-Iluminacao/VI-RT/out/build/x64-Debug/CMakeFiles/LibImage.dir
-C:/Users/marco/source/repos/Visualizacao-e-Iluminacao/VI-RT/out/build/x64-Debug/CMakeFiles/LibPrimitive.dir
-C:/Users/marco/source/repos/Visualizacao-e-Iluminacao/VI-RT/out/build/x64-Debug/CMakeFiles/LibRenderer.dir
-C:/Users/marco/source/repos/Visualizacao-e-Iluminacao/VI-RT/out/build/x64-Debug/CMakeFiles/LibScene.dir
-C:/Users/marco/source/repos/Visualizacao-e-Iluminacao/VI-RT/out/build/x64-Debug/CMakeFiles/LibShader.dir
-C:/Users/marco/source/repos/Visualizacao-e-Iluminacao/VI-RT/out/build/x64-Debug/CMakeFiles/edit_cache.dir
-C:/Users/marco/source/repos/Visualizacao-e-Iluminacao/VI-RT/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir
+C:/Users/paulo/Desktop/Visualizacao e Iluminacao/VI-RT/out/build/x64-Debug/CMakeFiles/main.dir
+C:/Users/paulo/Desktop/Visualizacao e Iluminacao/VI-RT/out/build/x64-Debug/CMakeFiles/LibCamera.dir
+C:/Users/paulo/Desktop/Visualizacao e Iluminacao/VI-RT/out/build/x64-Debug/CMakeFiles/LibImage.dir
+C:/Users/paulo/Desktop/Visualizacao e Iluminacao/VI-RT/out/build/x64-Debug/CMakeFiles/LibPrimitive.dir
+C:/Users/paulo/Desktop/Visualizacao e Iluminacao/VI-RT/out/build/x64-Debug/CMakeFiles/LibRenderer.dir
+C:/Users/paulo/Desktop/Visualizacao e Iluminacao/VI-RT/out/build/x64-Debug/CMakeFiles/LibScene.dir
+C:/Users/paulo/Desktop/Visualizacao e Iluminacao/VI-RT/out/build/x64-Debug/CMakeFiles/LibShader.dir
+C:/Users/paulo/Desktop/Visualizacao e Iluminacao/VI-RT/out/build/x64-Debug/CMakeFiles/edit_cache.dir
+C:/Users/paulo/Desktop/Visualizacao e Iluminacao/VI-RT/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir

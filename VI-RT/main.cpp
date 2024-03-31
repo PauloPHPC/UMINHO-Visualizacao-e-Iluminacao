@@ -16,7 +16,6 @@
 #include <chrono>
 
 
-
 int main(int argc, const char * argv[]) {
     Scene scene;
     Perspective *cam; // Camera
@@ -27,9 +26,8 @@ int main(int argc, const char * argv[]) {
     double cpu_time_used;
 
     //change for specific path in local machine
-    std::string my_path = "C:/Users/marco/Desktop/Trabalho_Vi/Visualizacao-e-Iluminacao-master/VI-RT/Scene/tinyobjloader/models/cornell_box_VI.obj";
-
-   
+    //std::string my_path = "C:/Users/marco/Desktop/Trabalho_Vi/Visualizacao-e-Iluminacao-master/VI-RT/Scene/tinyobjloader/models/cornell_box_VI.obj";   
+    std::string my_path = "C:/Users/paulo/Desktop/Visualizacao e Iluminacao/VI-RT/Scene/tinyobjloader/models/cornell_box_VI.obj";
 
     //createAreaLights(scene);
     success = scene.Load(my_path); 
@@ -67,10 +65,10 @@ int main(int argc, const char * argv[]) {
     shd = new AmbientShader(&scene, background);
     //shd = new DistributedShader(&scene, background);
     //shd = new WhittedShader(&scene, background);
-    shd = new PathTracerShader(&scene, background);
+    //shd = new PathTracerShader(&scene, background);
 
 
-    int spp = 1;
+    int spp = 64;
     StandardRenderer myRender (cam, &scene, img, shd, spp);
     
 
@@ -81,7 +79,8 @@ int main(int argc, const char * argv[]) {
     cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
 
     // save the image
-    std::string out_path = "/Users/marco/Desktop/Trabalho_Vi/Visualizacao-e-Iluminacao-master/VI-RT/ImageOut/";    
+    //std::string out_path = "/Users/marco/Desktop/Trabalho_Vi/Visualizacao-e-Iluminacao-master/VI-RT/ImageOut/";    
+    std::string out_path = "C:/Users/paulo/Desktop/Visualizacao e Iluminacao/VI-RT/ImageOut/";
 
     img->Save(out_path+"MyImage.ppm");
 

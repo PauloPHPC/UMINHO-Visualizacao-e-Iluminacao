@@ -93,7 +93,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "main::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-main-Debug-02c2015695827aa57793.json",
+					"jsonFile" : "target-main-Debug-b1df98ee05e410d194f2.json",
 					"name" : "main",
 					"projectIndex" : 0
 				}
@@ -103,8 +103,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "C:/Users/marco/source/repos/Visualizacao-e-Iluminacao/VI-RT/out/build/x64-Debug",
-		"source" : "C:/Users/marco/source/repos/Visualizacao-e-Iluminacao/VI-RT"
+		"build" : "C:/Users/paulo/Desktop/Visualizacao e Iluminacao/VI-RT/out/build/x64-Debug",
+		"source" : "C:/Users/paulo/Desktop/Visualizacao e Iluminacao/VI-RT"
 	},
 	"version" : 
 	{
