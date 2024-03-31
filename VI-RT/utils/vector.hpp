@@ -1,3 +1,10 @@
+//
+//  vector.hpp
+//  VI-RT
+//
+//  Created by Luis Paulo Santos on 30/01/2023.
+//
+
 #ifndef vector_hpp
 #define vector_hpp
 
@@ -18,8 +25,6 @@ public:
     Vector operator +(const Vector &p) const { return {X+p.X, Y+p.Y, Z+p.Z};}
     Vector operator *(const float f) const { return {f*X, f*Y, f*Z};}
     Vector operator *(const double f) const { return {(float)(f*X), (float)(f*Y), (float)(f*Z)};}
-    //negation
-    Vector operator -() const {return {-X, -Y, -Z}; }
     Vector operator /(const float f) const {return {X/f, Y/f, Z/f};}
 
     friend Vector operator*(const float f, const Vector& p) {
@@ -28,11 +33,6 @@ public:
     friend Vector operator*(const double f, const Vector& p) {
         return p*f;
     }
-    /* Para já não usado
-        Point operator*(const Point& p) const{
-            return Point(X*p.X,Y*p.Y,Z*p.Z);
-        }
-    */
     // note that methods declared within the class are inline by default
     inline float norm () const{
         return std::sqrtf(X*X+Y*Y+Z*Z);
@@ -45,7 +45,6 @@ public:
             Z /= my_norm;
         }
     }
-
     float dot (const Vector v2) const {
         return X*v2.X + Y*v2.Y + Z*v2.Z;
     }
@@ -86,6 +85,7 @@ public:
             *v2 = Vector(0, Z, -Y) / sqrtf(Y * Y + Z * Z);
         *v3 = cross(*v2);
     }
+
     // returns a new vector, which is this vector rotated to the
     // reference system defined by Rx, Ry, Rz
     Vector Rotate (Vector Rx, Vector Ry, Vector Rz) {
@@ -106,11 +106,11 @@ public:
     Point ():X(0.),Y(0.),Z(0.){}
     Point (float x, float y, float z):X(x),Y(y),Z(z){}
     ~Point(){}
-    Point operator +(const Vector &v) const {return {X + v.X, Y + v.Y, Z + v.Z};}
-    Point operator -(const Point &p) const { return {X-p.X, Y-p.Y, Z-p.Z};}
+    Point operator -(const Point& p) const { return { X - p.X, Y - p.Y, Z - p.Z }; }
     Point operator +(const Point &p) const { return {X+p.X, Y+p.Y, Z+p.Z};}
     Point operator *(const float f) const { return {f*X, f*Y, f*Z};}
     Point operator *(const double f) const { return {(float)(f*X), (float)(f*Y), (float)(f*Z)};}
+    Point operator +(const Vector& v) const { return { X + v.X, Y + v.Y, Z + v.Z }; }
     friend Point operator*(const float f, const Point& p) {
         return p*f;
     }

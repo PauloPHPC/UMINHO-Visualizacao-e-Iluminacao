@@ -1,95 +1,95 @@
+//
+//  AmbientShader.cpp
+//  VI-RT-LPS
+//
+//  Created by Luis Paulo Santos on 14/03/2023.
+//
+
 #include "PathTracerShader.hpp"
 
-RGB PathTracerShader:: specularReflection(Intersection isect, Phong *f, int depth){
-    // para já está igual ao whittedShader
-    RGB color(0.,0.,0.);
-    Vector Rdir, s_dir;
-    float pdf;
-    Intersection s_isect;
-    // generate the specular ray
-    float cos = isect.gn.dot(isect.wo);
-    Rdir = 2.f * cos * isect.gn - isect.wo;
-    if(f->Ns >= 1000){
-        Ray specular(isect.p, Rdir);
-
-        specular.adjustOrigin(isect.gn);
-
-        // trace ray
-        bool intersected = scene->trace(specular, &s_isect);
-        // shade this intersection
-        RGB reflected_color = shade (intersected, s_isect,depth+1);
-        color = f->Ks * reflected_color;
-        return color;
-
-    }else{ //glossy case -> glossy materials
-        float rnd[2];
-        rnd[0] = ((float)rand()) / ((float)RAND_MAX);
-        rnd[1] = ((float)rand()) / ((float)RAND_MAX);
-        Vector S_around_N;
-        const float cos_theta = powf(rnd[1], 1.f/(f->Ns+1.f));
-        const float aux_r1 = powf(rnd[1], 2.f/(f->Ns+1.f));
-        S_around_N.Y = sinf(2.f*M_PI*rnd[0])*sqrtf(1.f-aux_r1);
-        S_around_N.X = cosf(2.f*M_PI*rnd[0])*sqrtf(1.f-aux_r1);
-        pdf = (f->Ns+1.f)*powf(cos_theta, f->Ns)/(2.f*M_PI);
-        Vector Rx, Ry;
-        Rdir.CoordinateSystem(&Rx, &Ry);
-        s_dir = S_around_N.Rotate (Rx, Ry, Rdir);
-        Ray specular(isect.p, s_dir);
-        specular.adjustOrigin(isect.gn);
-        bool intersected = scene->trace(specular, &s_isect);
-        RGB Rcolor = shade (intersected, s_isect, depth+1);
-        color = (f->Ks * Rcolor * powf(cos_theta, f->Ns)/(2.f*M_PI)) / pdf ;
-        return color;
-    }
-
-}
 
 RGB PathTracerShader::directLighting(Intersection isect, Phong *f) {
     RGB color(0.,0.,0.);
 
-    for (auto l = scene->lights.begin() ; l != scene->lights.end() ; l++) {
-        if ((*l)->type == AMBIENT_LIGHT) {  // is it an ambient light ?
+    Light* l;
+    int l_ndx;
+    const bool RANDOM_SAMPLE_ONE = true;
+    float light_pdf;
+
+    for (auto l_iter = scene->lights.begin() ; l_iter != scene->lights.end() ; l_iter++) {
+        RGB this_l_color(0., 0., 0.);
+        l = (Light*)(*l_iter);
+
+        // if random sampling reaasign l
+       /* if (RANDOM_SAMPLE_ONE) {
+            // randomly select one light source
+            l_ndx = rand() % scene->numLights;
+            l = scene->lights[l_ndx];
+            light_pdf = 1.f / ((float)scene->numLights);
+        }*/
+        
+        if (l->type == AMBIENT_LIGHT) {  // is it an ambient light ?
             if (!f->Ka.isZero()) {
                 RGB Ka = f->Ka;
-                color += Ka * (*l)->L();
+                color += Ka * l->L();
             }
-            continue;
         }
-        if ((*l)->type == POINT_LIGHT) {  // is it a point light ?
+        if (l->type == POINT_LIGHT) {  // is it a point light ?
             if(!f->Kd.isZero()){
+                RGB L, Kd = f->Kd;
                 Point lpoint;
+
                 // get position and radiance of the light source
-                RGB L = (*l)->Sample_L(NULL,&lpoint);
+                L = l->Sample_L(NULL,&lpoint);
+
                 // compute the direction from the intersection to the light
                 Vector Ldir = isect.p.point2vec(lpoint);
                 const float Ldistance = Ldir.norm();
+
                 Ldir.normalize();
 
-                //compute the cosine (Ldir, shading normal)
+                // compute the cosine between Ldir  and the shading normal at the intersection point
                 float cosL = Ldir.dot(isect.sn);
+
                 if (cosL>0.){ //the light is NOT behind the primitive
+                    // generate the shadow ray
                     Ray shadow(isect.p,Ldir);
+
+
+                    shadow.x = isect.pix_x;
+                    shadow.y = isect.pix_y;
+                    shadow.FaceID = isect.FaceID;
+
+
                     shadow.adjustOrigin(isect.gn);
-                    if(scene->visibility(shadow,Ldistance-EPSILON)) color += f->Kd * L * cosL;
+                    if (scene->visibility(shadow, Ldistance - EPSILON)) {
+                        this_l_color = Kd * L * cosL;
+                    }
                 }
             }
             continue;
 
         }
-        if ((*l)->type == AREA_LIGHT) { // is it an area light ?
+        if (l->type == AREA_LIGHT) { // is it an area light ?
             if(!f -> Kd.isZero()){
                 RGB L, Kd = f->Kd;
                 Point lpoint;
                 float l_pdf;
                 // l é iterador
-                AreaLight *al = (AreaLight *) (*l);
+                AreaLight *al = (AreaLight *)l;
+
+                // get the position and radiance of the light source
+                // get 2 random number in [0,1[
                 float rnd[2];
                 rnd[0] = ((float)rand()) / ((float)RAND_MAX);
                 rnd[1] = ((float)rand()) / ((float)RAND_MAX);
                 L = al->Sample_L(rnd, &lpoint, l_pdf);
+
+
                 // compute the direction from the intersection point to the light source
                 Vector Ldir = isect.p.point2vec(lpoint);
                 const float Ldistance = Ldir.norm();
+
                 // now normalize Ldir
                 Ldir.normalize();
 
@@ -97,21 +97,78 @@ RGB PathTracerShader::directLighting(Intersection isect, Phong *f) {
                 float cosL = Ldir.dot(isect.sn);
                 // cosine between Ldir and the area light source normal
                 float cosL_LA = Ldir.dot(al->gem->normal);
+                
                 //shade
                 if (cosL>0. && cosL_LA<=0.) {
-                    //generate ray
+                    // generate the shadow ray
                     Ray shadow(isect.p,Ldir);
+
+                    shadow.x = isect.pix_x;
+                    shadow.y = isect.pix_y;
+                    shadow.FaceID = isect.FaceID;
+
                     shadow.adjustOrigin(isect.gn);
                     if(scene->visibility(shadow,Ldistance-EPSILON)){
-                        color+= (Kd * L * cosL) / l_pdf;
+                        this_l_color += (Kd * L * cosL) / l_pdf;
                     }
                 }
             }
         }
-    }
+        /*if (RANDOM_SAMPLE_ONE) {
+            color = this_l_color / light_pdf;
+            break;
+        }
+        else {   // not random sampling, sum the individual contributions
+            color += this_l_color;
+        }*/
+    } // for loop
     return color;
 }
 
+RGB PathTracerShader::specularReflection(Intersection isect, Phong* f, int depth) {
+    // para já está igual ao whittedShader
+    RGB color(0., 0., 0.);
+    Vector Rdir, s_dir;
+    float pdf;
+    Intersection s_isect;
+    // generate the specular ray
+    float cos = isect.gn.dot(isect.wo);
+    Rdir = 2.f * cos * isect.gn - isect.wo;
+    if (f->Ns >= 1000) {
+        Ray specular(isect.p, Rdir);
+
+        specular.adjustOrigin(isect.gn);
+
+        // trace ray
+        bool intersected = scene->trace(specular, &s_isect);
+        // shade this intersection
+        RGB reflected_color = shade(intersected, s_isect, depth + 1);
+        color = f->Ks * reflected_color;
+        return color;
+
+    }
+    else { //glossy case -> glossy materials
+        float rnd[2];
+        rnd[0] = ((float)rand()) / ((float)RAND_MAX);
+        rnd[1] = ((float)rand()) / ((float)RAND_MAX);
+        Vector S_around_N;
+        const float cos_theta = powf(rnd[1], 1.f / (f->Ns + 1.f));
+        const float aux_r1 = powf(rnd[1], 2.f / (f->Ns + 1.f));
+        S_around_N.Y = sinf(2.f * M_PI * rnd[0]) * sqrtf(1.f - aux_r1);
+        S_around_N.X = cosf(2.f * M_PI * rnd[0]) * sqrtf(1.f - aux_r1);
+        pdf = (f->Ns + 1.f) * powf(cos_theta, f->Ns) / (2.f * M_PI);
+        Vector Rx, Ry;
+        Rdir.CoordinateSystem(&Rx, &Ry);
+        s_dir = S_around_N.Rotate(Rx, Ry, Rdir);
+        Ray specular(isect.p, s_dir);
+        specular.adjustOrigin(isect.gn);
+        bool intersected = scene->trace(specular, &s_isect);
+        RGB Rcolor = shade(intersected, s_isect, depth + 1);
+        color = (f->Ks * Rcolor * powf(cos_theta, f->Ns) / (2.f * M_PI)) / pdf;
+        return color;
+    }
+
+}
 
 RGB PathTracerShader:: diffuseReflection(Intersection isect, Phong *f, int depth){
     RGB color(0.,0.,0.);

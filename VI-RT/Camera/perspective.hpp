@@ -1,3 +1,10 @@
+//
+//  perspective.hpp
+//  VI-RT
+//
+//  Created by Luis Paulo Santos on 10/02/2023.
+//
+
 #ifndef perspective_hpp
 #define perspective_hpp
 
@@ -38,7 +45,7 @@ public:
         c2w[2][2] = F.Z;
 
     }
-    void GenerateRay(const int x, const int y, Ray *r, const float *cam_jitter);
+    bool GenerateRay(const int x, const int y, Ray *r, const float *cam_jitter=NULL);
     void getResolution (int *_W, int *_H) {*_W=W; *_H=H;}
 };
 

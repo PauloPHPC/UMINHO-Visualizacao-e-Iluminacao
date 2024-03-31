@@ -1,3 +1,10 @@
+//
+//  image.hpp
+//  VI-RT
+//
+//  Created by Luis Paulo Santos on 10/02/2023.
+//
+
 #ifndef image_hpp
 #define image_hpp
 
@@ -28,7 +35,7 @@ public:
         imagePlane[y*W+x] += rgb;
         return true;
     }
-    virtual bool Save (std::string filename) {return true;}
+    bool Save (std::string filename) {return true;}
 };
 
 #endif /* image_hpp */

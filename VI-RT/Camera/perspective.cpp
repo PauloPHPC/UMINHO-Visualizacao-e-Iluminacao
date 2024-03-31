@@ -1,7 +1,14 @@
+//
+//  perspective.cpp
+//  VI-RT
+//
+//  Created by Luis Paulo Santos on 10/02/2023.
+//
+
 #include "perspective.hpp"
 
 // cam_jitter helps distribute the samples more uniformly
-void Perspective::GenerateRay(const int x, const int y, Ray *r, const float *cam_jitter) {
+bool Perspective::GenerateRay(const int x, const int y, Ray *r, const float *cam_jitter) {
     // anti-aliasing the image
     float normalized_x,normalized_y, aspect_ratio;
     if (cam_jitter != NULL) {
@@ -24,4 +31,5 @@ void Perspective::GenerateRay(const int x, const int y, Ray *r, const float *cam
     r->o = this->Eye;
     r->x = x;
     r->y = y;
+    return false;
 }

@@ -1,4 +1,13 @@
+//
+//  AmbientShader.cpp
+//  VI-RT-LPS
+//
+//  Created by Luis Paulo Santos on 14/03/2023.
+//
+
+
 #include "WhittedShader.hpp"
+#include "../../Rays/ray.hpp"
 
 RGB WhittedShader::directLighting (Intersection isect, Phong *f) {
     RGB color(0.,0.,0.);
@@ -33,7 +42,6 @@ RGB WhittedShader::directLighting (Intersection isect, Phong *f) {
                     if(scene->visibility(shadow,Ldistance-EPSILON)) color += f->Kd * L * cosL;
 
                 }
-
 
             }
             continue;

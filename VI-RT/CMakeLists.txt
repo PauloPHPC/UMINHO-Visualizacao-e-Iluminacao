@@ -73,12 +73,6 @@ add_library(
         Shader/PathTracerShader/PathTracerShader.hpp
         Shader/shader.hpp
         )
-add_library(
-        LibUtils
-        utils/AABB.cpp
-        utils/RGB.hpp
-        utils/vector.hpp
-)
 # Link libraries
 target_link_libraries(main LibCamera) 
 target_link_libraries(main LibPrimitive)

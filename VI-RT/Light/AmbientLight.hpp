@@ -1,3 +1,11 @@
+//
+//  AmbientLight.hpp
+//  VI-RT-LPS
+//
+//  Created by Luis Paulo Santos on 14/03/2023.
+//
+
+
 #ifndef AmbientLight_hpp
 #define AmbientLight_hpp
 

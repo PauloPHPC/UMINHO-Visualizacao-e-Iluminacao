@@ -1,9 +1,17 @@
+//
+//  Scene.cpp
+//  VI-RT
+//
+//  Created by Luis Paulo Santos on 30/01/2023.
+//
+
+#include "scene.hpp"
+
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tinyobjloader/tiny_obj_loader.h"
 #include "../Primitive/primitive.hpp"
 #include "../Primitive/Geometry/mesh.hpp"
 #include "../Primitive/BRDF/Phong.hpp"
-#include "scene.hpp"
 
 
 #include <iostream>
@@ -42,21 +50,27 @@ static void PrintInfo (const ObjReader myObj) {
         }
         std::cout << std::endl;
 
-        printf("There are %zu material indexes\n", it_shape->mesh.material_ids.size());
+        printf("There are %lu material indexes\n", it_shape->mesh.material_ids.size());
     }
 
 }
 
+/*
+ Use tiny load to load .obj scene descriptions
+ https://github.com/tinyobjloader/tinyobjloader
+ */
 
 bool Scene::Load (const std::string &fname) {
     tinyobj::ObjReader myObjReader;
     // Loader triangulating the faces
     if (!myObjReader.ParseFromFile(fname)) {
-        if (!myObjReader.Error().empty()) {std::cerr << "TinyObjReader: " << myObjReader.Error();}
         return false;
     }
+
     //PrintInfo(myObjReader);
+    // 
     // convert loader's representation to my representation
+
     const std::vector<shape_t> shapes = myObjReader.GetShapes();
     const std::vector<material_t> materials = myObjReader.GetMaterials();
     attrib_t attrib = myObjReader.GetAttrib();
@@ -80,7 +94,7 @@ bool Scene::Load (const std::string &fname) {
         Mesh *mesh = new Mesh();
         Primitive* primitive = new Primitive();
         primitive->name = shape.name;
-        //std::cout << "PRIMITIVE name: " << primitive->name << "\n";
+        
         // Load unique vertices
         for (size_t i = 0; i < attrib.vertices.size(); i += 3) {
 
@@ -107,13 +121,7 @@ bool Scene::Load (const std::string &fname) {
                 face.vert_ndx[i] = idx.vertex_index;  //loading of vertex values
                 face.vert_normals_ndx[i] = idx.normal_index;
 
-                /*
-                    TODO:
-                     variável bool hasShadingNormals:
-                     Se temos check whether the normal_index field is valid or not for each vertex, and if it is,
-                     we store the index of the shading normal in the face.vert_normals_ndx array and set the hasShadingNormals
-                     flag to true
-                */
+                
                 if(idx.normal_index >=0){
                     face.vert_normals_ndx[i] = idx.normal_index;
                     face.hasShadingNormals = true;
@@ -148,12 +156,7 @@ bool Scene::Load (const std::string &fname) {
             //Próximo vertice, every 3 in array
             index_offset +=fv;
             primitive->material_ndx = shape.mesh.material_ids[f];
-            /*
-            if(primitive->name == "short_block" || primitive->name == "tall_block"){
-                //std::cout << "Material index for face " << f << ": " << shape.mesh.material_ids[f] << std::endl;
-
-            }
-            */
+            
             //Conversions between related types in a safe and predictable way static_cast<new_type>(expression)
             mesh->numFaces = static_cast<int>(shape.mesh.num_face_vertices.size());
             mesh->numVertices = static_cast<int>(attrib.vertices.size() / 3);
@@ -164,20 +167,11 @@ bool Scene::Load (const std::string &fname) {
                 mesh->normals.push_back(normal);
             }
             mesh->numNormals = static_cast<int>(mesh->normals.size());
-
-            /*
-            The reason we use a pointer to a Geometry object (Geometry*) instead of a Geometry object directly
-            is that Geometry is an abstract base class, meaning it has pure virtual functions that must
-            be implemented by any derived class.
-            Dps de dar load aos vertices, normals e faces vamos criar a nova Primitiva
-
-        */
         }
         Geometry* geometry = mesh;
         primitive->g = geometry;
         this->prims.push_back(primitive);
         this->numPrimitives++;
-
     }
     return true;
 }
@@ -185,6 +179,7 @@ bool Scene::Load (const std::string &fname) {
 bool Scene::trace(Ray r, Intersection *isect) {
     Intersection curr_isect;
     bool intersection = false;
+
     if (numPrimitives==0) return false;
 
     // iterate over all primitives
@@ -196,29 +191,16 @@ bool Scene::trace(Ray r, Intersection *isect) {
                 isect->f = this->BRDFs[(*prim_itr)->material_ndx];
                 isect->isLight = false;
             }
-
-        }
-    }
-    for(auto l = lights.begin(); l != lights.end(); l++){
-        if ((*l)->type == AREA_LIGHT) {
-            AreaLight *al = (AreaLight *)*l;//static_cast<AreaLight*> (*l);
-            if (al->gem->intersect(r, &curr_isect)) {
-                if (!intersection || curr_isect.depth < isect->depth) {
-                    intersection = true;
-                    *isect = curr_isect;
-                    isect->isLight = true;
-                    isect->Le = al->L();
-                    isect->f = nullptr;
-                }
+            else if (curr_isect.depth < isect->depth) {
+                *isect = curr_isect;
+                isect->f = BRDFs[(*prim_itr)->material_ndx];
             }
         }
     }
-
     return intersection;
 }
 
 // checks whether a point on a light source (distance maxL) is visible
-// Similar to Scene::trace() but finishes immediately once the 1st intersection is found
 bool Scene::visibility (Ray s, const float maxL) {
     bool visible = true;
     Intersection curr_isect;

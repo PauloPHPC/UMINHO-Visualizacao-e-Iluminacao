@@ -1,3 +1,10 @@
+//
+//  PointLight.hpp
+//  VI-RT-LPS
+//
+//  Created by Luis Paulo Santos on 06/04/2023.
+//
+
 #ifndef PointLight_hpp
 #define PointLight_hpp
 

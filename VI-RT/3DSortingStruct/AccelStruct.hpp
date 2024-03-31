@@ -1,3 +1,10 @@
+//
+//  AccelStruct.hpp
+//  VI-RT
+//
+//  Created by Luis Paulo Santos on 31/01/2023.
+//
+
 #ifndef AccelStruct_hpp
 #define AccelStruct_hpp
 

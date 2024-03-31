@@ -1,7 +1,16 @@
+//
+//  PointLight.hpp
+//  VI-RT-LPS
+//
+//  Created by Luis Paulo Santos on 06/04/2023.
+//
+
 #ifndef AreaLight_hpp
 #define AreaLight_hpp
+
 #include "light.hpp"
 #include "../Primitive/Geometry/triangle.hpp"
+#include <math.h>
 
 class AreaLight: public Light {
 public:
@@ -14,9 +23,12 @@ public:
         pdf = 1.f/gem->area(); // for uniform sampling the area
         intensity = _power * pdf;
     }
-    ~AreaLight () {delete gem;}
-// return a point p, RGB radiance and pdf given a rand pair (0, 1(
-// sample point: "Globbbl Illumination Compendium", pp. 12, item 18
+    ~AreaLight () {delete gem;}    
+    // return the Light RGB radiance for a given point : p
+    RGB L (Point p) {return power;}
+    // return the Light RGB radiance
+    RGB L () {return power;}
+    // sample point as described in the "Gloabl illumination Compendium", page 12, item 18
     RGB Sample_L (float *r, Point *p, float &_pdf) {
         const float sqrt_r0 = sqrtf(r[0]);
         const float alpha = 1.f - sqrt_r0;
@@ -28,9 +40,6 @@ public:
         _pdf = pdf;
         return intensity;
     }
-    // return the Light RGB radiance for a given point : p
-    RGB L (Point p) {return power;}
-    // return the Light RGB radiance
-    RGB L () {return power;}
 };
+
 #endif /* AreaLight_hpp */

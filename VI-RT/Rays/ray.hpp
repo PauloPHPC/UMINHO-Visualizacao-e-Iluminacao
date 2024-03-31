@@ -1,3 +1,10 @@
+//
+//  Ray.hpp
+//  VI-RT
+//
+//  Created by Luis Paulo Santos on 30/01/2023.
+//
+
 #ifndef Ray_hpp
 #define Ray_hpp
 
@@ -9,6 +16,8 @@ class Ray {
 public:
     Point o; // ray origin
     Vector dir; // ray direction
+    int FaceID;  // ID of the face where the origin lays in
+    Vector invDir;  // ray direction reciprocal for intersections
     int x,y;  // pixel associated with this pixel
     Ray () {}
     Ray (Point o, Vector d): o(o),dir(d) {}

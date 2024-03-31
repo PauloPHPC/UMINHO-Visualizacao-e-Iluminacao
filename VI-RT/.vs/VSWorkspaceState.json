@@ -1,0 +1,18 @@
+{
+  "OutputFoldersPerTargetSystem": {
+    "Computador Local": [
+      "out\\build\\x64-Debug",
+      "out\\install\\x64-Debug"
+    ]
+  },
+  "ExpandedNodes": [
+    "",
+    "\\Light",
+    "\\Primitive\\BRDF",
+    "\\Shader",
+    "\\Shader\\AmbientShader",
+    "\\Shader\\PathTracerShader"
+  ],
+  "SelectedNode": "\\Shader\\PathTracerShader",
+  "PreviewInSolutionExplorer": false
+}
