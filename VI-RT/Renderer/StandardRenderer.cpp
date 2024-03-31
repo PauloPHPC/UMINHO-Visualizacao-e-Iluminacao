@@ -17,10 +17,22 @@ void StandardRenderer::Render () {
     // resolution from the camera
     this->cam->getResolution(&W,&H);
     // number of samples per pixel
+
+    int totalPixels = W * H; // Total number of pixels
+    int completedPixels = 0; // Track completed pixels
        
 
         for (int y = 0 ; y< H ; y++) {  // loop over rows
             for (int x=0 ; x< W ; x++) { // loop over columns
+                
+                completedPixels++;
+
+                // Update progress bar (every 1% or adjust based on preference)
+                if (completedPixels % (totalPixels / 100) == 0) {
+                    int progress = completedPixels * 100 / totalPixels;
+                    std::cout << "\rRendering progress: [" << std::string(progress / 2, '#') << std::string(50 - progress / 2, ' ') << "] " << progress << "%" << std::flush;
+                }
+                
                 Ray primary;
                 Intersection isect;
                 bool intersected = false;
