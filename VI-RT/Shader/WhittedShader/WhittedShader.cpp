@@ -51,7 +51,7 @@ RGB WhittedShader::directLighting (Intersection isect, Phong *f) {
     return color;
 }
 
-RGB WhittedShader::specularReflection (Intersection isect, Phong *f) {
+RGB WhittedShader::specularReflection (Intersection isect, Phong *f, int depth) {
     RGB color(0.,0.,0.);
 
     // generate the specular ray
@@ -64,24 +64,23 @@ RGB WhittedShader::specularReflection (Intersection isect, Phong *f) {
     // trace ray
     bool intersected = scene->trace(specular, &s_isect);
     // shade this intersection
-    RGB reflected_color = shade (intersected, s_isect);
+    RGB reflected_color = shade (intersected, s_isect, depth+1);
 
-    return f->Ks * reflected_color;
+    return  reflected_color;
 }
 
-RGB WhittedShader::shade(bool intersected, Intersection isect) {
+RGB WhittedShader::shade(bool intersected, Intersection isect, int depth) {
     RGB color(0.,0.,0.);
 
     // if no intersection, return background
     if (!intersected) {
         return (background);
     }
-
     // get the BRDF
     Phong *f = (Phong *)isect.f;
 
     // if there is a specular component sample it
-    if (!f->Ks.isZero()) color += specularReflection(isect, f);
+    if (!f->Ks.isZero() && depth<3) color += specularReflection(isect, f, depth+1);
 
     color += directLighting(isect, f);
 

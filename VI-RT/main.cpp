@@ -26,8 +26,8 @@ int main(int argc, const char * argv[]) {
     double cpu_time_used;
 
     //change for specific path in local machine
-    //std::string my_path = "C:/Users/marco/Desktop/Trabalho_Vi/Visualizacao-e-Iluminacao-master/VI-RT/Scene/tinyobjloader/models/cornell_box_VI.obj";   
-    std::string my_path = "C:/Users/paulo/Desktop/Visualizacao e Iluminacao/VI-RT/Scene/tinyobjloader/models/cornell_box_VI.obj";
+    std::string my_path = "C:/Users/marco/Desktop/RepoGit/VI-RT/Scene/tinyobjloader/models/cornell_box_VI.obj";   
+    //std::string my_path = "C:/Users/paulo/Desktop/Visualizacao e Iluminacao/VI-RT/Scene/tinyobjloader/models/cornell_box_VI.obj";
 
     //createAreaLights(scene);
     success = scene.Load(my_path); 
@@ -40,14 +40,22 @@ int main(int argc, const char * argv[]) {
     
 
     // add an ambient light to the scene
-    AmbientLight ambient(RGB(0.9, 0.9, 0.9));
+    AmbientLight ambient(RGB(0.09, 0.09, 0.09));
     scene.lights.push_back(&ambient);
     scene.numLights++;
+    
+    
+    PointLight* pl1 = new PointLight(RGB(0.65, 0.65, 0.65),
+        Point(288, 508, 282));
+    scene.lights.push_back(pl1);
+    scene.numLights++;
+
+
     scene.printSummary();
        
 
     // Image resolution
-    const int W = 640;
+    const int W = 480;
     const int H = 480;
 
     img = new ImagePPM(W,H);
@@ -58,17 +66,17 @@ int main(int argc, const char * argv[]) {
     const float fovW = 60.f;
     const float fovH = fovW * (float)H / (float)W;  // in degrees
     const float fovWrad = fovW * 3.14f / 180.f, fovHrad = fovH * 3.14f / 180.f;    // to radians
-    cam = new Perspective(Eye, At, Up, W, H, fovW, fovH); 
+    cam = new Perspective(Eye, At, Up, W, H, fovWrad, fovHrad); 
 
     // create the shader
     RGB background(0.05f, 0.05f, 0.55f);
-    shd = new AmbientShader(&scene, background);
+    //shd = new AmbientShader(&scene, background);
     //shd = new DistributedShader(&scene, background);
-    //shd = new WhittedShader(&scene, background);
+    shd = new WhittedShader(&scene, background);
     //shd = new PathTracerShader(&scene, background);
 
 
-    int spp = 64;
+    int spp = 1;
     StandardRenderer myRender (cam, &scene, img, shd, spp);
     
 
@@ -79,8 +87,8 @@ int main(int argc, const char * argv[]) {
     cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
 
     // save the image
-    //std::string out_path = "/Users/marco/Desktop/Trabalho_Vi/Visualizacao-e-Iluminacao-master/VI-RT/ImageOut/";    
-    std::string out_path = "C:/Users/paulo/Desktop/Visualizacao e Iluminacao/VI-RT/ImageOut/";
+    std::string out_path = "/Users/marco/Desktop/RepoGit/VI-RT/ImageOut/";    
+    //std::string out_path = "C:/Users/paulo/Desktop/Visualizacao e Iluminacao/VI-RT/ImageOut/";
 
     img->Save(out_path+"MyImage.ppm");
 

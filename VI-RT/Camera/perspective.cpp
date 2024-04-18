@@ -15,8 +15,8 @@ bool Perspective::GenerateRay(const int x, const int y, Ray *r, const float *cam
         normalized_x = 2.f * (static_cast<float>(x) + cam_jitter[0])/static_cast<float>(W) - 1.f;
         normalized_y= 2.f * (static_cast<float>(H-y-1) + cam_jitter[1])/static_cast<float>(H) - 1.f;
     }else{
-        aspect_ratio = static_cast<float>(W) / static_cast<float>(H);
-        normalized_x = ((static_cast<float>(x) / static_cast<float>(W - 1)) * 2.0f - 1.0f) * aspect_ratio;;
+        //aspect_ratio = static_cast<float>(W) / static_cast<float>(H);
+        normalized_x = ((static_cast<float>(x) / static_cast<float>(W - 1)) * 2.0f - 1.0f); //* aspect_ratio;;
         normalized_y = 1.0f - (static_cast<float>(y) / static_cast<float>(H - 1)) * 2.0f;
     }
 
