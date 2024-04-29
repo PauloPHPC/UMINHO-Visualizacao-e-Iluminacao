@@ -5,13 +5,15 @@
 #include "../../Rays/ray.hpp"
 #include "../../Light/AreaLight.hpp"
 
-class DistributedShader: public Shader {
-    RGB background;
-    RGB directLighting (Intersection isect, Phong *f);
-    RGB specularReflection (Intersection isect, Phong *f);
+class DistributedShader : public Shader {
+	RGB background;
+	RGB directLighting(Intersection isect, Phong* f);
+	RGB specularReflection(Intersection isect, Phong* f,
+		int depth);
 public:
-    DistributedShader (Scene *scene, RGB bg): background(bg),Shader(scene) {}
-    RGB shade (bool intersected, Intersection isect);
+	DistributedShader(Scene* scene, RGB bg) :
+		background(bg), Shader(scene) {}
+	RGB shade(bool intersected, Intersection isect, int depth);
 };
 
 

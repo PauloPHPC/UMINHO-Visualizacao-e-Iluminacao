@@ -14,6 +14,8 @@
 #include "Light/PointLight.hpp"
 #include "Light/AreaLight.hpp"
 #include <chrono>
+#include <stdlib.h>
+#include <math.h>
 
 
 int main(int argc, const char * argv[]) {
@@ -40,14 +42,91 @@ int main(int argc, const char * argv[]) {
     
 
     // add an ambient light to the scene
-    AmbientLight ambient(RGB(0.09, 0.09, 0.09));
+   /* AmbientLight ambient(RGB(0.1, 0.1, 0.1));
     scene.lights.push_back(&ambient);
-    scene.numLights++;
+    scene.numLights++;*/
     
     
-    PointLight* pl1 = new PointLight(RGB(0.65, 0.65, 0.65),
+   /* PointLight* pl1 = new PointLight(RGB(0.65, 0.65, 0.65),
         Point(288, 508, 282));
     scene.lights.push_back(pl1);
+    scene.numLights++; */
+
+    // Luminária 1 - Frontal Esquerda
+    Point v1 = { 178, 508, 93 };
+    Point v2 = { 228, 508, 93};
+    Point v3 = { 228, 508, 143 };
+    Vector n = { 0, -1, 0 };
+    RGB power = { 0.5, 0.5, 0.5 };
+    auto* al1 = new AreaLight(power, v1, v2, v3, n);
+    scene.lights.push_back(al1);
+    scene.numLights++;
+
+    v1 = { 178, 508, 93 };
+    v2 = { 228, 508, 143 };
+    v3 = { 178, 508, 143 };
+    auto* al2 = new AreaLight(power, v1, v2, v3, n);
+    scene.lights.push_back(al2);
+    scene.numLights++;
+
+    // Luminária 2 - Frontal Direita
+    v1 = { 327, 508, 93 };
+    v2 = { 377, 508, 93 };
+    v3 = { 377, 508, 143 };
+    al1 = new AreaLight(power, v1, v2, v3, n);
+    scene.lights.push_back(al1);
+    scene.numLights++;
+
+    v1 = { 327, 508, 93 };
+    v2 = { 377, 508, 143 };
+    v3 = { 327, 508, 143 };
+    al2 = new AreaLight(power, v1, v2, v3, n);
+    scene.lights.push_back(al2);
+    scene.numLights++;
+
+    // Luminária 3 - Centro
+    v1 = { 253, 508, 279 };
+    v2 = { 303, 508, 279 };
+    v3 = { 303, 508, 329 };
+    al1 = new AreaLight(power*2, v1, v2, v3, n);
+    scene.lights.push_back(al1);
+    scene.numLights++;
+
+    v1 = { 253, 508, 279 };
+    v2 = { 303, 508, 329 };
+    v3 = { 253, 508, 329 };
+    al2 = new AreaLight(power*2, v1, v2, v3, n);
+    scene.lights.push_back(al2);
+    scene.numLights++;
+
+    // Luminária 4 - Traseira Esquerda
+    v1 = { 178, 508, 466 };
+    v2 = { 228, 508, 466 };
+    v3 = { 228, 508, 516 };
+    al1 = new AreaLight(power, v1, v2, v3, n);
+    scene.lights.push_back(al1);
+    scene.numLights++;
+
+    v1 = { 178, 508, 466 };
+    v2 = { 228, 508, 516 };
+    v3 = { 178, 508, 516 };
+    al2 = new AreaLight(power, v1, v2, v3, n);
+    scene.lights.push_back(al2);
+    scene.numLights++;
+
+    // Luminária 5 - Traseira Direita
+    v1 = { 327, 508, 466 };
+    v2 = { 377, 508, 466 };
+    v3 = { 377, 508, 516 };
+    al1 = new AreaLight(power, v1, v2, v3, n);
+    scene.lights.push_back(al1);
+    scene.numLights++;
+
+    v1 = { 327, 508, 466 };
+    v2 = { 377, 508, 516 };
+    v3 = { 327, 508, 516 };
+    al2 = new AreaLight(power, v1, v2, v3, n);
+    scene.lights.push_back(al2);
     scene.numLights++;
 
 
@@ -55,24 +134,24 @@ int main(int argc, const char * argv[]) {
        
 
     // Image resolution
-    const int W = 480;
-    const int H = 480;
+    const int W = 1024;
+    const int H = 1024;
 
     img = new ImagePPM(W,H);
 
     // Camera parameters 
-    const Point Eye = { 280,275,-490 }, At = { 280,265,0 };
+    const Point Eye = { 280,265,-300 }, At = { 280,265,0 };
     const Vector Up={0.f,1.f,0.f};
     const float fovW = 60.f;
     const float fovH = fovW * (float)H / (float)W;  // in degrees
-    const float fovWrad = fovW * 3.14f / 180.f, fovHrad = fovH * 3.14f / 180.f;    // to radians
+    const float fovWrad = fovW * 3.141592f / 180.f, fovHrad = fovH * 3.141592f / 180.f;    // to radians
     cam = new Perspective(Eye, At, Up, W, H, fovWrad, fovHrad); 
 
     // create the shader
     RGB background(0.05f, 0.05f, 0.55f);
     //shd = new AmbientShader(&scene, background);
-    //shd = new DistributedShader(&scene, background);
-    shd = new WhittedShader(&scene, background);
+    //shd = new WhittedShader(&scene, background);
+    shd = new DistributedShader(&scene, background);    
     //shd = new PathTracerShader(&scene, background);
 
 
