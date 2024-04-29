@@ -176,47 +176,31 @@ bool Scene::Load (const std::string &fname) {
     return true;
 }
 
-bool Scene::trace(Ray r, Intersection *isect) {
+bool Scene::trace(Ray r, Intersection* isect) {
     Intersection curr_isect;
     bool intersection = false;
 
-    if (numPrimitives==0) return false;
-
-    // iterate over all primitives
-    for (auto prim_itr = prims.begin() ; prim_itr != prims.end() ; prim_itr++) {
-        if ((*prim_itr)->g->intersect(r, &curr_isect)) {
-            if (!intersection || curr_isect.depth < isect->depth) { // first intersection
-                intersection = true;
-                *isect = curr_isect;
-                isect->f = this->BRDFs[(*prim_itr)->material_ndx];
-                isect->isLight = false;
-            }
-            else if (curr_isect.depth < isect->depth) {
-                *isect = curr_isect;
-                isect->f = BRDFs[(*prim_itr)->material_ndx];
-            }
+    for (auto prim_itr = prims.begin(); prim_itr != prims.end(); prim_itr++) {
+        if ((*prim_itr)->g->intersect(r, &curr_isect) && (!intersection || curr_isect.depth < isect->depth)) {
+            *isect = curr_isect;
+            isect->f = BRDFs[(*prim_itr)->material_ndx];
+            isect->isLight = false;
+            intersection = true;
         }
     }
 
-    isect->isLight = false;
     for (auto& light : lights) {
         if (light->type == AREA_LIGHT) {
-            AreaLight* al = (AreaLight*)light;
-            if (al->gem->intersect(r, &curr_isect)) {
-                if (!intersection) { // first intersection
-                    intersection = true;
-                    *isect = curr_isect;
-                    isect->isLight = true;
-                    isect->Le = al->L();
-                }
-                else if (curr_isect.depth < isect->depth) {
-                    *isect = curr_isect;
-                    isect->isLight = true;
-                    isect->Le = al->L();
-                }
+            AreaLight* al = static_cast<AreaLight*>(light);
+            if (al->gem->intersect(r, &curr_isect) && (!intersection || curr_isect.depth < isect->depth)) {
+                *isect = curr_isect;
+                isect->isLight = true;
+                isect->Le = al->L();
+                intersection = true;
             }
         }
     }
+
     return intersection;
 }
 

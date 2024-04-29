@@ -51,7 +51,7 @@ int main(int argc, const char * argv[]) {
         Point(288, 508, 282));
     scene.lights.push_back(pl1);
     scene.numLights++; */
-
+    
     // Luminária 1 - Frontal Esquerda
     Point v1 = { 178, 508, 93 };
     Point v2 = { 228, 508, 93};
@@ -98,7 +98,7 @@ int main(int argc, const char * argv[]) {
     al2 = new AreaLight(power*2, v1, v2, v3, n);
     scene.lights.push_back(al2);
     scene.numLights++;
-
+    
     // Luminária 4 - Traseira Esquerda
     v1 = { 178, 508, 466 };
     v2 = { 228, 508, 466 };
@@ -155,7 +155,7 @@ int main(int argc, const char * argv[]) {
     //shd = new PathTracerShader(&scene, background);
 
 
-    int spp = 1;
+    int spp = 64;
     StandardRenderer myRender (cam, &scene, img, shd, spp);
     
 
