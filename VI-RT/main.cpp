@@ -52,7 +52,7 @@ int main(int argc, const char * argv[]) {
     scene.lights.push_back(pl1);
     scene.numLights++; */
     
-    // Luminária 1 - Frontal Esquerda
+   // Luminária 1 - Frontal Esquerda
     Point v1 = { 178, 508, 93 };
     Point v2 = { 228, 508, 93};
     Point v3 = { 228, 508, 143 };
@@ -61,7 +61,7 @@ int main(int argc, const char * argv[]) {
     auto* al1 = new AreaLight(power, v1, v2, v3, n);
     scene.lights.push_back(al1);
     scene.numLights++;
-
+    
     v1 = { 178, 508, 93 };
     v2 = { 228, 508, 143 };
     v3 = { 178, 508, 143 };
@@ -129,7 +129,34 @@ int main(int argc, const char * argv[]) {
     scene.lights.push_back(al2);
     scene.numLights++;
 
+    /*
+    int n_lights = 360;
+    int side_length = sqrt(n_lights); // Assumindo uma distribuição quadrada de luzes
+    float distance = 20.0; // Distância entre as luzes
+    float triangle_size = 10.0; // Tamanho dos triângulos em cada luz quadrada
+    Vector n = { 0, -1, 0 }; // Direção normal das luzes
+    RGB power = { 0.5, 0.5, 0.5 }; // Intensidade das luzes
 
+    for (int i = 0; i < side_length; i++) {
+        for (int j = 0; j < side_length; j++) {
+            Point v1 = { distance * i, 508, distance * j };
+            Point v2 = { distance * i + triangle_size, 508, distance * j };
+            Point v3 = { distance * i + triangle_size, 508, distance * j + triangle_size };
+
+            // Primeira luz triangular
+            auto* al1 = new AreaLight(power, v1, v2, v3, n);
+            scene.lights.push_back(al1);
+
+            // Segunda luz triangular (compartilha um vértice com a primeira)
+            v1 = { distance * i, 508, distance * j };
+            v2 = { distance * i + triangle_size, 508, distance * j + triangle_size };
+            v3 = { distance * i, 508, distance * j + triangle_size };
+
+            auto* al2 = new AreaLight(power, v1, v2, v3, n);
+            scene.lights.push_back(al2);
+        }
+    }
+    scene.numLights = n_lights;*/
     scene.printSummary();
        
 
@@ -155,7 +182,7 @@ int main(int argc, const char * argv[]) {
     //shd = new PathTracerShader(&scene, background);
 
 
-    int spp = 64;
+    int spp = 16;
     StandardRenderer myRender (cam, &scene, img, shd, spp);
     
 

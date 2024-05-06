@@ -92,9 +92,7 @@ void StandardRenderer::Render() {
         thread.join();
     }
 
-    // Ensure 100% progress is shown
-    std::cout << "\rRendering progress: [##################################################] 100%" << std::endl;
-}
+  }
 
 
 
