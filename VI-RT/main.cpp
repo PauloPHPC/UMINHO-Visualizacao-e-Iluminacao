@@ -59,14 +59,14 @@ int main(int argc, const char * argv[]) {
     Vector n = { 0, -1, 0 };
     RGB power = { 0.5, 0.5, 0.5 };
     auto* al1 = new AreaLight(power, v1, v2, v3, n);
-    scene.lights.push_back(al1);
+    /*scene.lights.push_back(al1);
     scene.numLights++;
     
     v1 = { 178, 508, 93 };
     v2 = { 228, 508, 143 };
-    v3 = { 178, 508, 143 };
+    v3 = { 178, 508, 143 };*/
     auto* al2 = new AreaLight(power, v1, v2, v3, n);
-    scene.lights.push_back(al2);
+    /*scene.lights.push_back(al2);
     scene.numLights++;
 
     // Luminária 2 - Frontal Direita
@@ -82,7 +82,7 @@ int main(int argc, const char * argv[]) {
     v3 = { 327, 508, 143 };
     al2 = new AreaLight(power, v1, v2, v3, n);
     scene.lights.push_back(al2);
-    scene.numLights++;
+    scene.numLights++;*/
 
     // Luminária 3 - Centro
     v1 = { 253, 508, 279 };
@@ -100,7 +100,7 @@ int main(int argc, const char * argv[]) {
     scene.numLights++;
     
     // Luminária 4 - Traseira Esquerda
-    v1 = { 178, 508, 466 };
+   /*v1 = { 178, 508, 466 };
     v2 = { 228, 508, 466 };
     v3 = { 228, 508, 516 };
     al1 = new AreaLight(power, v1, v2, v3, n);
@@ -127,7 +127,7 @@ int main(int argc, const char * argv[]) {
     v3 = { 327, 508, 516 };
     al2 = new AreaLight(power, v1, v2, v3, n);
     scene.lights.push_back(al2);
-    scene.numLights++;
+    scene.numLights++; */
 
     /*
     int n_lights = 360;
@@ -178,11 +178,11 @@ int main(int argc, const char * argv[]) {
     RGB background(0.05f, 0.05f, 0.55f);
     //shd = new AmbientShader(&scene, background);
     //shd = new WhittedShader(&scene, background);
-    shd = new DistributedShader(&scene, background);    
-    //shd = new PathTracerShader(&scene, background);
+    //shd = new DistributedShader(&scene, background);    
+    shd = new PathTracerShader(&scene, background);
 
 
-    int spp = 16;
+    int spp = 2048;
     StandardRenderer myRender (cam, &scene, img, shd, spp);
     
 
