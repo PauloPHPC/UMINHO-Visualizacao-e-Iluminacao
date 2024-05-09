@@ -6,8 +6,15 @@ project(VI-RT)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 
-if  (WIN32)
 
+
+
+
+
+
+if  (WIN32)
+    
+    
 else(WIN32) #Linux and Mac
     find_package(OpenGL REQUIRED)
     find_package(GLUT REQUIRED)
@@ -28,7 +35,7 @@ add_library(
         LibImage
         Image/image.hpp
         Image/ImagePPM.cpp
-        Image/ImagePPM.hpp
+        Image/ImagePPM.hpp    
 )
 #add_library(
 #        LibLight
@@ -81,3 +88,7 @@ target_link_libraries(main LibScene)
 target_link_libraries(main LibShader)
 target_link_libraries(main LibRenderer)
 target_link_libraries(main LibImage)
+
+
+
+

@@ -1,7 +1,8 @@
 #include "ImageJPG.hpp"
 #include "../utils/RGB.hpp"
-#include "../OpenCV/opencv2/core.hpp"
+#include <opencv2/opencv.hpp>
 #include <iostream>
+
 
 void ImageJPG::ToneMap_original() {
     imageToSave = new JPG_pixel[W * H];
@@ -152,7 +153,8 @@ bool ImageJPG::Save(std::string filename) {
     }
 
     // Use the appropriate ToneMap function here
-     ToneMap_ACES();
+    ToneMap_original();
+    //ToneMap_ACES();
     // ToneMap_Uncharted();
 
     // Create an empty cv::Mat with 3 channels for RGB

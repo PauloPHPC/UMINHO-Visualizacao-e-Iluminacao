@@ -2,7 +2,7 @@
 #define ImageEXR_hpp
 
 #include "image.hpp"
-#include "../OpenCV/opencv2/core.hpp"
+#include <opencv2/opencv.hpp>
 
 class ImageEXR : public Image {
 public:
