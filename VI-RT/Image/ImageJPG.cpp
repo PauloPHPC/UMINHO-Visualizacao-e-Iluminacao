@@ -1,6 +1,6 @@
 #include "ImageJPG.hpp"
 #include "../utils/RGB.hpp"
-#include <opencv2/opencv.hpp>
+#include "../OpenCV/opencv2/core.hpp"
 #include <iostream>
 
 void ImageJPG::ToneMap_original() {

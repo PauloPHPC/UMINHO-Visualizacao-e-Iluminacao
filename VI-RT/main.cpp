@@ -6,6 +6,9 @@
 #include "Renderer/renderer.hpp"
 #include "Renderer/StandardRenderer.hpp"
 #include "Image/ImagePPM.hpp"
+//#include "Image/ImageEXR.hpp"
+//#include "Image/ImageJPG.hpp"
+//#include "Image/ImagePFM.hpp"
 #include "Shader/AmbientShader/AmbientShader.hpp"
 #include "Shader/WhittedShader/WhittedShader.hpp"
 #include "Shader/DistributedShader/DistributedShader.hpp"
@@ -21,7 +24,10 @@
 int main(int argc, const char * argv[]) {
     Scene scene;
     Perspective *cam; // Camera
-    ImagePPM *img;    // Image 
+    ImagePPM *img;    // Image
+    //ImageJPG *img_jpg;
+    //ImagePFM *img_pfm;
+    //ImageEXR *img_exr;
     Shader *shd;
     bool success;
     clock_t start, end;
@@ -85,16 +91,16 @@ int main(int argc, const char * argv[]) {
     scene.numLights++;*/
 
     // Luminária 3 - Centro
-    v1 = { 253, 508, 279 };
-    v2 = { 303, 508, 279 };
-    v3 = { 303, 508, 329 };
+    v1 = { 343.0,547.9,227.0 };
+    v2 = { 343.0,547.9,332.0 };
+    v3 = { 213.0,547.9,332.0 };
     al1 = new AreaLight(power*2, v1, v2, v3, n);
     scene.lights.push_back(al1);
     scene.numLights++;
 
-    v1 = { 253, 508, 279 };
-    v2 = { 303, 508, 329 };
-    v3 = { 253, 508, 329 };
+    v1 = { 213.0,547.9,332.0 };
+    v2 = { 213.0,547.9,227.0 };
+    v3 = { 343.0,547.9,227.0 };
     al2 = new AreaLight(power*2, v1, v2, v3, n);
     scene.lights.push_back(al2);
     scene.numLights++;
@@ -165,6 +171,9 @@ int main(int argc, const char * argv[]) {
     const int H = 1024;
 
     img = new ImagePPM(W,H);
+    //img_jpg = new ImageJPG(H, W);
+    //img_pfm = new ImagePFM(H, W);
+    //img_exr = new ImageEXR(H, W);
 
     // Camera parameters 
     const Point Eye = { 280,265,-300 }, At = { 280,265,0 };
@@ -182,9 +191,11 @@ int main(int argc, const char * argv[]) {
     shd = new PathTracerShader(&scene, background);
 
 
-    int spp = 2048;
+    int spp = 16;
     StandardRenderer myRender (cam, &scene, img, shd, spp);
-    
+    //StandardRenderer myRender_jpg(cam, &scene, img_jpg, shd,spp);
+    //StandardRenderer myRender_pfm(cam, &scene, img_pfm, shd, spp);
+    //StandardRenderer myRender_exr(cam, &scene, img_exr, shd, spp);
 
     
     start = clock();
@@ -197,7 +208,9 @@ int main(int argc, const char * argv[]) {
     //std::string out_path = "C:/Users/paulo/Desktop/Visualizacao e Iluminacao/VI-RT/ImageOut/";
 
     img->Save(out_path+"MyImage.ppm");
-
+    //img_jpg->Save(out_path + "jpg_output.jpg");
+    //img_pfm->Save(out_path + "pfm_output.pfm");
+    //img_exr->Save(out_path + "exr_output.exr");
     fprintf(stdout, "Rendering time = %.3lf secs\n\n", cpu_time_used);
 
     std::cout << "That's all, folks!" << std::endl;
