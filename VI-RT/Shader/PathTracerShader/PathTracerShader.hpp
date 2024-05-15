@@ -12,8 +12,11 @@
 #define _USE_MATH_DEFINES
 #include "../shader.hpp"
 #include "../../Primitive/BRDF/Phong.hpp"
+#include "../../utils/RGB.hpp"
 
-class PathTracerShader: public Shader {
+RGB Clamp2(const RGB& color);
+
+class PathTracerShader: public Shader {    
     RGB background;
     RGB directLighting (Intersection isect, Phong *f);
     RGB specularReflection (Intersection isect, Phong *f, int depth);

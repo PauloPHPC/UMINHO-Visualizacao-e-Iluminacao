@@ -35,6 +35,12 @@ public:
         imagePlane[y*W+x] += rgb;
         return true;
     }
+
+    RGB get(int x, int y) const {
+        if (x >= W || y >= H) return RGB();  // Retornar cor padrão (preto) se fora dos limites
+        return imagePlane[y * W + x];
+    }
+
     bool Save (std::string filename) {return true;}
 };
 

@@ -1,14 +1,8 @@
-//
-//  AmbientShader.cpp
-//  VI-RT-LPS
-//
-//  Created by Luis Paulo Santos on 14/03/2023.
-//
-
 #include "PathTracerShader.hpp"
 
 
-RGB PathTracerShader::directLighting(Intersection isect, Phong *f) {
+
+RGB PathTracerShader::directLighting(Intersection isect, Phong* f) {
     RGB color(0., 0., 0.);
 
     int light_index = rand() % (scene->numLights);
@@ -83,85 +77,27 @@ RGB PathTracerShader::directLighting(Intersection isect, Phong *f) {
         }
     } // end area light
 
-    return color * (float)scene->numLights;
+    return color;// *(float)scene->numLights;
 }
 
 RGB PathTracerShader::specularReflection(Intersection isect, Phong* f, int depth) {
-    RGB color(0., 0., 0.);
-    Vector Rdir, s_dir;
-    float pdf;
-    Intersection s_isect;
+    // direction R = 2 (N.V) N - V
     float cos = isect.gn.dot(isect.wo);
-    Rdir = 2.f * cos * isect.gn - isect.wo;
-    if (f->Ns >= 1000) { // ideal specular
-        Ray specular(isect.p, Rdir);
-        specular.adjustOrigin(isect.gn);
-        // trace ray
-        bool intersected = scene->trace(specular, &s_isect);
-        RGB Rcolor = shade(intersected, s_isect, depth + 1);
-        color = (f->Ks * Rcolor);
-    }
+    Vector Rdir = 2.f * cos * isect.gn - isect.wo;
+    Ray specular(isect.p, Rdir);
+    specular.adjustOrigin(isect.gn);
+    Intersection s_isect;
 
-    if (f->Ns < 1000) { // glossy materials
-        float rnd[2];
-        rnd[0] = ((float)rand()) / ((float)RAND_MAX);
-        rnd[1] = ((float)rand()) / ((float)RAND_MAX);
-        Vector S_around_N;
-        const float cos_theta = powf(rnd[1], 1. / (f->Ns + 1.));
-        S_around_N.Z = cos_theta;
-        const float aux_r1 = powf(rnd[1], 2. / (f->Ns + 1.));
-        S_around_N.Y = sinf(2. * M_PI * rnd[0]) * sqrtf(1. - aux_r1);
-        S_around_N.X = cosf(2. * M_PI * rnd[0]) * sqrtf(1. - aux_r1);
-        pdf = (f->Ns + 1.f) * powf(cos_theta, f->Ns) / (2.f * M_PI);
-        Vector Rx, Ry;
-        Rdir.CoordinateSystem(&Rx, &Ry);
-        s_dir = S_around_N.Rotate(Rx, Ry, Rdir);
-        Ray specular(isect.p, s_dir);
-        specular.adjustOrigin(isect.gn);
-        bool intersected = scene->trace(specular, &s_isect);
-        RGB Rcolor = shade(intersected, s_isect, depth + 1);
-        color = (f->Ks * Rcolor * powf(cos_theta, f->Ns) / (2.f * M_PI)) / pdf;
+    // trace ray
+    bool intersected = scene->trace(specular, &s_isect);
 
-    }
-    return color;
-
-}
-
-RGB PathTracerShader:: diffuseReflection(Intersection isect, Phong *f, int depth){
-    RGB color(0., 0., 0.); Vector dir; float pdf;
-    // actual direction distributed around N: 2 random number in [0,1[
-    float rnd[2];
-    rnd[0] = ((float)rand()) / ((float)RAND_MAX);
-    rnd[1] = ((float)rand()) / ((float)RAND_MAX);
-    Vector D_around_Z;
-    float cos_theta = D_around_Z.Z = sqrtf(rnd[1]); // cos sampling
-    D_around_Z.X = cosf(2. * M_PI * rnd[0]) * sqrtf(1. - rnd[1]);
-    D_around_Z.Y = sinf(2. * M_PI * rnd[0]) * sqrtf(1. - rnd[1]);
-    pdf = cos_theta / (M_PI);
-    // generate a coordinate system from N
-    Vector Rx, Ry;
-    isect.gn.CoordinateSystem(&Rx, &Ry);
-    Vector rotate = D_around_Z.Rotate(Rx, Ry, isect.gn);
-
-    Ray diffuse(isect.p, rotate);
-
-    diffuse.adjustOrigin(isect.gn);
-
-    //printf("origin %f %f %f\n", diffuse.o.X, diffuse.o.Y, diffuse.o.Z);
-    // OK, we have the ray : trace and shade it recursively
-    Intersection d_isect;
-    bool intersected = scene->trace(diffuse, &d_isect);
-    // if light source return 0 ; handled by direct
-    RGB Rcolor;
-    if (!d_isect.isLight) {
-        // shade this intersection
-        Rcolor = shade(intersected, d_isect, depth + 1);
-        color = (f->Kd * cos_theta * Rcolor) / pdf;
-    }
-    //print color
+    // shade this intersection
+    RGB color = shade(intersected, s_isect, 0);
 
     return color;
 }
+
+
 
 RGB PathTracerShader::shade(bool intersected, Intersection isect, int depth) {
     RGB color(0., 0., 0.);
@@ -203,6 +139,57 @@ RGB PathTracerShader::shade(bool intersected, Intersection isect, int depth) {
     }
 
     // if there is a diffuse component do direct light
-    if (!f->Kd.isZero()) color += directLighting(isect, f);
+    if (!f->Kd.isZero()) color += directLighting(isect, f); 
+    //color = Clamp2(color);
     return color;
-};
+
+
+}
+
+RGB Clamp2(const RGB& color) {
+    return RGB(
+        std::min(1.0f, std::max(0.0f, color.R)),
+        std::min(1.0f, std::max(0.0f, color.G)),
+        std::min(1.0f, std::max(0.0f, color.B))
+    );
+}
+
+
+
+
+RGB PathTracerShader::diffuseReflection(Intersection isect, Phong* f, int depth) {
+    RGB color(0., 0., 0.); Vector dir; float pdf;
+    // actual direction distributed around N: 2 random number in [0,1[
+    float rnd[2];
+    rnd[0] = ((float)rand()) / ((float)RAND_MAX);
+    rnd[1] = ((float)rand()) / ((float)RAND_MAX);
+    Vector D_around_Z;
+    float cos_theta = D_around_Z.Z = sqrtf(rnd[1]); // cos sampling
+    D_around_Z.X = cosf(2. * M_PI * rnd[0]) * sqrtf(1. - rnd[1]);
+    D_around_Z.Y = sinf(2. * M_PI * rnd[0]) * sqrtf(1. - rnd[1]);
+    pdf = cos_theta / (M_PI);
+    // generate a coordinate system from N
+    Vector Rx, Ry;
+    isect.gn.CoordinateSystem(&Rx, &Ry);
+    Vector rotate = D_around_Z.Rotate(Rx, Ry, isect.gn);
+
+    Ray diffuse(isect.p, rotate);
+
+    diffuse.adjustOrigin(isect.gn);
+
+    //printf("origin %f %f %f\n", diffuse.o.X, diffuse.o.Y, diffuse.o.Z);
+    // OK, we have the ray : trace and shade it recursively
+    Intersection d_isect;
+    bool intersected = scene->trace(diffuse, &d_isect);
+    // if light source return 0 ; handled by direct
+    RGB Rcolor;
+    if (!d_isect.isLight) {
+        // shade this intersection
+        Rcolor = shade(intersected, d_isect, depth + 1);
+        color = (f->Kd * cos_theta * Rcolor) / pdf;
+    }
+    //print color
+
+    return color;
+
+}

@@ -9,15 +9,16 @@
 #define StandardRenderer_hpp
 
 #include "renderer.hpp"
+RGB Clamp(const RGB& color);
 
 class StandardRenderer: public Renderer {
 private:
-    int spp;
+    int spp;  
 public:
     StandardRenderer(Camera* cam, Scene* scene, Image* img, Shader* shd, int _spp) : Renderer(cam, scene, img, shd) {
         spp = _spp;
     }
-    void Render ();
+    void Render();
 };
 
 #endif /* StandardRenderer_hpp */

@@ -83,14 +83,14 @@ bool Mesh::intersect (Ray r, Intersection *isect) {
         
         if (!TriangleIntersect(r, *face_it, &curr_isect)) continue;
 
-        intersect = true;
-        if (curr_isect.depth < min_depth) {  // this is closer
-            min_depth = curr_isect.depth;
-            min_isect = curr_isect;
-        }
-    }
-    *isect = min_isect;
-    return intersect;
+         intersect = true;
+         if (curr_isect.depth < min_depth) {  // this is closer
+             min_depth = curr_isect.depth;
+             min_isect = curr_isect;
+         }
+     }
+     *isect = min_isect;
+     return intersect;
 }
 
 

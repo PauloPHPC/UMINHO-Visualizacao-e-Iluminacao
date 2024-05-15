@@ -39,14 +39,14 @@ void StandardRenderer::Render() {
     for (const auto& tile : tiles) {
         tileQueue.push(tile);
     }
-    const bool jitter = true;
 
+    const bool jitter = true;
     std::atomic<int> completedPixels(0);
     int totalPixels = W * H;
     std::mutex queueMutex;
 
     auto renderTask = [&]() {
-        std::mt19937 gen(std::random_device{}());  // Gerador de números aleatórios
+        std::mt19937 gen(std::random_device{}());
         std::uniform_real_distribution<float> dist(0.0f, 1.0f);
         while (true) {
             Tile tile;
@@ -56,6 +56,7 @@ void StandardRenderer::Render() {
                 tile = tileQueue.front();
                 tileQueue.pop();
             }
+
             for (int y = tile.startY; y < tile.endY; ++y) {
                 for (int x = tile.startX; x < tile.endX; ++x) {
                     RGB color(0.f, 0.f, 0.f);
@@ -63,6 +64,11 @@ void StandardRenderer::Render() {
                         RGB this_color;
                         Ray primary;
                         float jitterV[2] = { dist(gen), dist(gen) };
+
+                        // Implementação de amostragem estratificada
+                        jitterV[0] = (ss + jitterV[0]) / spp;
+                        jitterV[1] = (ss + jitterV[1]) / spp;
+
                         cam->GenerateRay(x, y, &primary, jitter ? jitterV : nullptr);
 
                         Intersection isect;
@@ -71,9 +77,12 @@ void StandardRenderer::Render() {
                         color += this_color;
                     }
                     color = color / spp;
+                    color = Clamp(color); // Aplicar Clamp
+
                     img->set(x, y, color);
                 }
             }
+
             int pixelsThisTile = (tile.endX - tile.startX) * (tile.endY - tile.startY);
             int oldPixelCount = completedPixels.fetch_add(pixelsThisTile);
             int newPixelCount = oldPixelCount + pixelsThisTile;
@@ -92,38 +101,17 @@ void StandardRenderer::Render() {
         thread.join();
     }
 
-  }
+    // Pós-processamento para suavizar pixels brancos
+    //PostProcessWhitePixels(W, H);
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+RGB Clamp(const RGB& color) {
+    return RGB(
+        std::min(1.0f, std::max(0.0f, color.R)),
+        std::min(1.0f, std::max(0.0f, color.G)),
+        std::min(1.0f, std::max(0.0f, color.B))
+    );
+}
 
 
 /*
@@ -185,8 +173,59 @@ void StandardRenderer::Render() {
 
     // Ensure 100% progress is shown
     std::cout << "\rRendering progress: [##################################################] 100%" << std::endl;
-}
-?
+}*/
+
+
+
+
+/*
+void StandardRenderer::Render() {
+    int W = 0, H = 0;  // resolution
+    // resolution from the camera
+    this->cam->getResolution(&W, &H);
+    // number of samples per pixel
+
+    int totalPixels = W * H; // Total number of pixels
+    int completedPixels = 0; // Track completed pixels
+
+
+    for (int y = 0; y < H; y++) {  // loop over rows
+        for (int x = 0; x < W; x++) { // loop over columns
+
+            completedPixels++;
+
+            // Update progress bar (every 1% or adjust based on preference)
+            if (completedPixels % (totalPixels / 100) == 0) {
+                int progress = completedPixels * 100 / totalPixels;
+                std::cout << "\rRendering progress: [" << std::string(progress / 2, '#') << std::string(50 - progress / 2, ' ') << "] " << progress << "%" << std::flush;
+            }
+
+            Ray primary;
+            Intersection isect;
+            bool intersected = false;
+            RGB color(0.f, 0.f, 0.f);
+            //iterate through the pixel samples
+            for (int ss = 0; ss < spp; ss++) {
+                RGB this_color;
+                // taking multiple random samples within each pixel and averaging their color contributions
+                float jitterV[2];
+
+                // Generate Ray (camera)
+                this->cam->GenerateRay(x, y, &primary, jitterV);
+
+                // trace ray (scene), type of intersection
+                intersected = this->scene->trace(primary, &isect);
+
+                // shade this intersection (shader)
+                this_color = this->shd->shade(intersected, isect, 0);
+                color += this_color;
+            }
+            color = color / spp;
+            // write the result into the image frame buffer (image)
+            img->set(x, y, color);
+        }
+    }
+};*/
 
 
 
