@@ -210,7 +210,7 @@ int main(int argc, const char * argv[]) {
     shd = new PathTracerShader(&scene, background);
 
    
-    int spp = 2048;
+    int spp = 1;
     StandardRenderer myRender (cam, &scene, img, shd, spp);
    
 

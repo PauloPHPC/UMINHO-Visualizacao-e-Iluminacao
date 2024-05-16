@@ -36,7 +36,7 @@ RGB PathTracerShader::directLighting(Intersection isect, Phong* f) {
                 // adjust origin EPSILON along the normal: avoid self occlusion
                 shadow.adjustOrigin(isect.gn);
                 if (scene->visibility(shadow, Ldistance - EPSILON)) {
-                    color += f->Kd * L * cosL;
+                    color += f->Kd * L * cosL ;
                 }
             }
         }
@@ -77,7 +77,7 @@ RGB PathTracerShader::directLighting(Intersection isect, Phong* f) {
         }
     } // end area light
 
-    return color;// *(float)scene->numLights;
+    return color*(float)scene->numLights;
 }
 
 RGB PathTracerShader::specularReflection(Intersection isect, Phong* f, int depth) {
