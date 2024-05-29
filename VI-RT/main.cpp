@@ -20,133 +20,111 @@
 
 void setupLights(Scene& scene,bool ambLight, bool pLight, bool ctrLight, bool manyLight) {
     if (ambLight) {
-        AmbientLight ambient(RGB(0.05,0.05, 0.05));
+        AmbientLight ambient(RGB(0.1, 0.1, 0.1));
         scene.lights.push_back(&ambient);
         scene.numLights++;
     }
     if (pLight) {
-        PointLight* pl1 = new PointLight(RGB(0.65, 0.65, 0.65),Point(288, 508, 282));
+        PointLight* pl1 = new PointLight(RGB(0.65, 0.65, 0.65),Point(288, 547.9, 282));
         scene.lights.push_back(pl1);
         scene.numLights++;
-
-        
-        PointLight* pl2 = new PointLight(RGB(0.65, 0.65, 0.65), Point(288 + 50, 508, 282 + 50));
-        scene.lights.push_back(pl2);
-        scene.numLights++;
-
-        
-        PointLight* pl3 = new PointLight(RGB(0.65, 0.65, 0.65), Point(288 - 50, 508, 282 + 50));
-        scene.lights.push_back(pl3);
-        scene.numLights++;
-
-        
-        PointLight* pl4 = new PointLight(RGB(0.65, 0.65, 0.65), Point(288 + 50, 508, 282 - 50));
-        scene.lights.push_back(pl4);
-        scene.numLights++;
-
-        
-        PointLight* pl5 = new PointLight(RGB(0.65, 0.65, 0.65), Point(288 - 50, 508, 282 - 50));
-        scene.lights.push_back(pl5);
-        scene.numLights++;
-
     }
     if (ctrLight) {
-        RGB power = { 1, 1, 1 };
+        RGB power = { 0.5, 0.5, 0.5 };
         Vector n = { 0, -1, 0 };
         // Luminária 3 - Centro
         Point v1 = { 343.0,547.9,227.0 };
         Point v2 = { 343.0,547.9,332.0 };
         Point v3 = { 213.0,547.9,332.0 };
-        auto* al1 = new AreaLight(power, v1, v2, v3, n);
+        auto* al1 = new AreaLight(power * 2, v1, v2, v3, n);
         scene.lights.push_back(al1);
         scene.numLights++;
 
          v1 = { 213.0,547.9,332.0 };
          v2 = { 213.0,547.9,227.0 };
          v3 = { 343.0,547.9,227.0 };
-        auto* al2 = new AreaLight(power, v1, v2, v3, n);
+        auto* al2 = new AreaLight(power * 2, v1, v2, v3, n);
         scene.lights.push_back(al2);
         scene.numLights++;
     }
     if (manyLight) {        
         
         // Luminária 1 - Frontal Esquerda
-        Point v1 = { 178 - 100, 547.9, 93 };
-        Point v2 = { 228 - 100, 547.9, 93 };
-        Point v3 = { 228 - 100, 547.9, 143 };
+        Point v1 = { 178, 547.9, 93 };
+        Point v2 = { 228, 547.9, 93 };
+        Point v3 = { 228, 547.9, 143 };
         Vector n = { 0, -1, 0 };
         RGB power = { 0.5, 0.5, 0.5 };
         auto* al1 = new AreaLight(power, v1, v2, v3, n);
         scene.lights.push_back(al1);
         scene.numLights++;
 
-        v1 = { 178 - 100, 547.9, 93 };
-        v2 = { 228 - 100, 547.9, 143 };
-        v3 = { 178 - 100, 547.9, 143 };
+        v1 = { 178, 547.9, 93 };
+        v2 = { 228, 547.9, 143 };
+        v3 = { 178, 547.9, 143 };
         auto* al2 = new AreaLight(power, v1, v2, v3, n);
         scene.lights.push_back(al2);
         scene.numLights++;
 
         // Luminária 2 - Frontal Direita
-        v1 = { 327 + 100, 547.9, 93 };
-        v2 = { 377 + 100, 547.9, 93 };
-        v3 = { 377 + 100, 547.9, 143 };
-        al1 = new AreaLight(power, v1, v2, v3, n);
+         v1 = { 327, 547.9, 93 };
+         v2 = { 377, 547.9, 93 };
+         v3 = { 377, 547.9, 143 };
+         al1 = new AreaLight(power, v1, v2, v3, n);
         scene.lights.push_back(al1);
         scene.numLights++;
 
-        v1 = { 327 + 100, 547.9, 93 };
-        v2 = { 377 + 100, 547.9, 143 };
-        v3 = { 327 + 100, 547.9, 143 };
-        al2 = new AreaLight(power, v1, v2, v3, n);
+         v1 = { 327, 547.9, 93 };
+         v2 = { 377, 547.9, 143 };
+         v3 = { 327, 547.9, 143 };
+         al2 = new AreaLight(power, v1, v2, v3, n);
         scene.lights.push_back(al2);
         scene.numLights++;
 
-        // Luminária 3 - Centro (Mantém-se no mesmo lugar)
-        v1 = { 343.0, 547.9, 227.0 };
-        v2 = { 343.0, 547.9, 332.0 };
-        v3 = { 213.0, 547.9, 332.0 };
-        al1 = new AreaLight(power * 2, v1, v2, v3, n);
+        // Luminária 3 - Centro
+         v1 = { 343.0,547.9,227.0 };
+         v2 = { 343.0,547.9,332.0 };
+         v3 = { 213.0,547.9,332.0 };
+         al1 = new AreaLight(power * 2, v1, v2, v3, n);
         scene.lights.push_back(al1);
         scene.numLights++;
 
-        v1 = { 213.0, 547.9, 332.0 };
-        v2 = { 213.0, 547.9, 227.0 };
-        v3 = { 343.0, 547.9, 227.0 };
-        al2 = new AreaLight(power * 2, v1, v2, v3, n);
+         v1 = { 213.0,547.9,332.0 };
+         v2 = { 213.0,547.9,227.0 };
+         v3 = { 343.0,547.9,227.0 };
+         al2 = new AreaLight(power * 2, v1, v2, v3, n);
         scene.lights.push_back(al2);
         scene.numLights++;
 
         // Luminária 4 - Traseira Esquerda
-        v1 = { 178 - 100, 547.9, 466 };
-        v2 = { 228 - 100, 547.9, 466 };
-        v3 = { 228 - 100, 547.9, 516 };
-        al1 = new AreaLight(power, v1, v2, v3, n);
+         v1 = { 178, 547.9, 466 };
+         v2 = { 228, 547.9, 466 };
+         v3 = { 228, 547.9, 516 };
+         al1 = new AreaLight(power, v1, v2, v3, n);
         scene.lights.push_back(al1);
         scene.numLights++;
 
-        v1 = { 178 - 100, 547.9, 466 };
-        v2 = { 228 - 100, 547.9, 516 };
-        v3 = { 178 - 100, 547.9, 516 };
-        al2 = new AreaLight(power, v1, v2, v3, n);
+         v1 = { 178, 547.9, 466 };
+         v2 = { 228, 547.9, 516 };
+         v3 = { 178, 547.9, 516 };
+         al2 = new AreaLight(power, v1, v2, v3, n);
         scene.lights.push_back(al2);
         scene.numLights++;
 
         // Luminária 5 - Traseira Direita
-        v1 = { 327 + 100, 547.9, 466 };
-        v2 = { 377 + 100, 547.9, 466 };
-        v3 = { 377 + 100, 547.9, 516 };
-        al1 = new AreaLight(power, v1, v2, v3, n);
+         v1 = { 327, 547.9, 466 };
+         v2 = { 377, 547.9, 466 };
+         v3 = { 377, 547.9, 516 };
+         al1 = new AreaLight(power, v1, v2, v3, n);
         scene.lights.push_back(al1);
         scene.numLights++;
 
-        v1 = { 327 + 100, 547.9, 466 };
-        v2 = { 377 + 100, 547.9, 516 };
-        v3 = { 327 + 100, 547.9, 516 };
-        al2 = new AreaLight(power, v1, v2, v3, n);
+         v1 = { 327, 547.9, 466 };
+         v2 = { 377, 547.9, 516 };
+         v3 = { 327, 547.9, 516 };
+         al2 = new AreaLight(power, v1, v2, v3, n);
         scene.lights.push_back(al2);
         scene.numLights++;
-
     }
 
 
@@ -164,8 +142,8 @@ int main(int argc, const char * argv[]) {
     bool ambLight, pLight, ctrLight, manyLight;
 
     //change for specific path in local machine
-    std::string my_path = "C:/Users/marco/Desktop/RepoGit/VI-RT/Scene/tinyobjloader/models/cornell_box_VI.obj";   
-    //std::string my_path = "C:/Users/paulo/Desktop/Visualizacao e Iluminacao/VI-RT/Scene/tinyobjloader/models/cornell_box_VI.obj";
+    //std::string my_path = "C:/Users/marco/Desktop/RepoGit/VI-RT/Scene/tinyobjloader/models/cornell_box_VI.obj";   
+    std::string my_path = "C:/Users/paulo/Desktop/Visualizacao e Iluminacao/VI-RT/Scene/tinyobjloader/models/cornell_box_VI.obj";
 
     //createAreaLights(scene);
     success = scene.Load(my_path); 
@@ -177,8 +155,8 @@ int main(int argc, const char * argv[]) {
     std::cout << "Scene Load Success!:-)\n";
 
     // Lights
-    ambLight = false; //ativa a AmbientLight - WhittedShader
-    pLight = false; //ativa as 5 PointLight - WhittedShader
+    ambLight = false; //ativa a AmbientLight
+    pLight = false; //ativa a PointLight
     ctrLight = true; //ativa a AreaLight central
     manyLight = false;//ativa a AreaLight central e as laterais
     
@@ -188,7 +166,7 @@ int main(int argc, const char * argv[]) {
 
     // Image resolution
     const int W = 1024;
-    const int H = W;
+    const int H = 1024;
 
     img = new ImagePPM(W,H);
     
@@ -209,9 +187,10 @@ int main(int argc, const char * argv[]) {
     //shd = new DistributedShader(&scene, background);    
     shd = new PathTracerShader(&scene, background);
 
-   
+
     int spp = 1;
     StandardRenderer myRender (cam, &scene, img, shd, spp);
+
    
 
     
@@ -221,10 +200,13 @@ int main(int argc, const char * argv[]) {
     cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
 
     // save the image
-    std::string out_path = "/Users/marco/Desktop/RepoGit/VI-RT/ImageOut/";    
-    //std::string out_path = "C:/Users/paulo/Desktop/Visualizacao e Iluminacao/VI-RT/ImageOut/";
+    //std::string out_path = "/Users/marco/Desktop/RepoGit/VI-RT/ImageOut/";    
+    std::string out_path = "C:/Users/paulo/Desktop/Visualizacao e Iluminacao/VI-RT/ImageOut/";
 
     img->Save(out_path+"MyImage.ppm");
+    img->SaveJPG(out_path + "MyImage.jpg");
+    img->SavePFM(out_path + "MyImage.pfm");
+    img->SaveEXR(out_path + "MyImage.exr");
     
     fprintf(stdout, "Rendering time = %.3lf secs\n\n", cpu_time_used);
 

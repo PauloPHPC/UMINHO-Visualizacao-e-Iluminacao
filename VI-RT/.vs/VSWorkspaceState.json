@@ -7,12 +7,9 @@
   },
   "ExpandedNodes": [
     "",
-    "\\Light",
-    "\\Primitive\\BRDF",
-    "\\Shader",
-    "\\Shader\\AmbientShader",
-    "\\Shader\\PathTracerShader"
+    "\\Image",
+    "\\vcpkg_installed\\x64-windows"
   ],
-  "SelectedNode": "\\Shader\\PathTracerShader",
+  "SelectedNode": "\\CMakeLists.txt",
   "PreviewInSolutionExplorer": false
 }

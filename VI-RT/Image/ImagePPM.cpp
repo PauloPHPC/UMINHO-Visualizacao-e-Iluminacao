@@ -15,7 +15,11 @@
 #include <fstream>
 #include <cassert>
 #include <exception>
-
+#include <setjmp.h>
+#include <OpenEXR/ImfRgbaFile.h>
+#include <OpenEXR/ImfRgba.h>
+#include <turbojpeg.h>
+ 
 void ImagePPM::ToneMap() {
     imageToSave = new PPM_pixel[W * H];
     // loop over each pixel in the image, clamp and convert to byte format
@@ -68,3 +72,90 @@ bool ImagePPM::Save(std::string filename) {
     return true;
 }
 
+bool ImagePPM::SaveJPG(std::string filename, int quality) {
+    tjhandle tjInstance = tjInitCompress();
+    if (!tjInstance) {
+        std::cerr << "Error initializing TurboJPEG compressor" << std::endl;
+        return false;
+    }
+
+    unsigned char* jpegBuf = nullptr;
+    unsigned long jpegSize = 0;
+    int pixelFormat = TJPF_RGB;
+
+    if (tjCompress2(tjInstance, (unsigned char*)imageToSave, W, 0, H, pixelFormat, &jpegBuf, &jpegSize, TJSAMP_444, quality, TJFLAG_FASTDCT) < 0) {
+        std::cerr << "Error compressing JPEG image: " << tjGetErrorStr() << std::endl;
+        tjDestroy(tjInstance);
+        return false;
+    }
+
+    std::ofstream ofs(filename, std::ios::binary);
+    if (!ofs) {
+        std::cerr << "Error opening output file: " << filename << std::endl;
+        tjFree(jpegBuf);
+        tjDestroy(tjInstance);
+        return false;
+    }
+
+    ofs.write(reinterpret_cast<const char*>(jpegBuf), jpegSize);
+    ofs.close();
+
+    tjFree(jpegBuf);
+    tjDestroy(tjInstance);
+    return true;
+}
+
+bool ImagePPM::SavePFM(std::string filename) {
+    std::ofstream ofs(filename, std::ios::binary);
+
+    if (!ofs) {
+        std::cerr << "Error: Cannot open file for writing: " << filename << std::endl;
+        return false;
+    }
+
+    ofs << "PF\n";
+    ofs << this->W << " " << this->H << "\n";
+    ofs << "-1.0\n"; // Negative value indicates Little Endian
+
+    // Write the image data in binary format in reverse order (top-left to bottom-right)
+    for (int j = this->H - 1; j >= 0; --j) {
+        for (int i = 0; i < this->W; ++i) {
+            const RGB& rgb = imagePlane[j * this->W + i];
+            ofs.write(reinterpret_cast<const char*>(&rgb.R), sizeof(float));
+            ofs.write(reinterpret_cast<const char*>(&rgb.G), sizeof(float));
+            ofs.write(reinterpret_cast<const char*>(&rgb.B), sizeof(float));
+        }
+    }
+
+    ofs.close();
+    return true;
+}
+
+bool ImagePPM::SaveEXR(std::string filename) {
+    Imf::Rgba* pixels = new Imf::Rgba[W * H];
+
+    float exposure = 2.0f;  // Fator de exposição para simular HDR
+    for (int j = 0; j < H; ++j) {
+        for (int i = 0; i < W; ++i) {
+            int index = j * W + i;
+            pixels[index].r = imagePlane[index].R * exposure;  // Red channel
+            pixels[index].g = imagePlane[index].G * exposure;  // Green channel
+            pixels[index].b = imagePlane[index].B * exposure;  // Blue channel
+            pixels[index].a = 1.0f;  // No alpha channel, set to 1.0
+        }
+    }
+
+    try {
+        Imf::RgbaOutputFile file(filename.c_str(), W, H, Imf::WRITE_RGBA);
+        file.setFrameBuffer(pixels, 1, W);
+        file.writePixels(H);
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Error writing EXR file: " << e.what() << std::endl;
+        delete[] pixels;
+        return false;
+    }
+
+    delete[] pixels;
+    return true;
+}
